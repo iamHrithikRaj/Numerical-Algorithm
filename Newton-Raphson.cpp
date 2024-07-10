@@ -1,36 +1,49 @@
-/* Newton Raphson Method */
 #include <iostream>
-#include <iomanip>
-#include <math.h>
-using namespace std;
-float f(float x){
-    return x*log10(x)-1.2;
+#include <cmath>
+
+// Function to compute f(x) = x^2 - 2
+double f(double x) {
+    return x * x * x + x  - 1 ;
 }
-float df(float x){
-    return log10(x) + 0.43429;
+
+// Function to compute f'(x) = 2x
+double f_prime(double x) {
+    return  3* x + 1 ;
 }
-int main(){
-    int itr,maxitr;
-    float h,x0,x1,aerr;
-    cout << "Enter x0,allowed error,"
-    << "maximum iterations" << endl;
-    cin >> x0 >> aerr >> maxitr;
-    cout << fixed;
-    for (itr=1;itr<=maxitr;itr++){
-        h = f(x0)/df(x0);
-        x1 = x0-h;
-        cout << "Iteration no." << setw(3) << itr
-        << "X = " << setw(9) << setprecision(6)
-        << x1 << endl;
-        if (fabs(h) < aerr){
-            cout << "After" << setw(3) << itr
-            << "iterations, root = "
-            << setw(8) << setprecision(6) << x1;
-            return 0;
+
+int main() {
+    // Initial values
+    double x0 = 1.0; // initial guess
+    double epsilon = 1e-6; // tolerance
+    int maxIter = 100; // maximum number of iterations
+
+    // Initialize variables
+    double x = x0;
+    double fx, f_prime_x, x_next;
+    int iter = 0;
+
+    // Newton Raphson method
+    while (iter < maxIter) {
+        // Compute f(x) and f'(x)
+        fx = f(x);
+        f_prime_x = f_prime(x);
+
+        // Compute x_next
+        x_next = x - fx / f_prime_x;
+
+        // Print iteration details
+        std::cout << "Iteration " << iter << ": x = " << x << ", f(x) = " << fx << ", f'(x) = " << f_prime_x << ", x_next = " << x_next << std::endl;
+
+        // Check for convergence
+        if (std::abs(x_next - x) < epsilon) {
+            std::cout << "Converged! The root is approximately " << x_next << std::endl;
+            break;
         }
-        x0 = x1;
+
+        // Update x
+        x = x_next;
+        iter++;
     }
-    cout << "Iterations not sufficient,"
-    << "solution does not converge" << endl;
-    return 1;
+
+    return 0;
 }
